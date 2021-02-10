@@ -7,7 +7,7 @@ using namespace std;
 
 struct Point{
     long double x,y;
-    
+
     Point operator+(const Point &rhs){ return Point{x + rhs.x , y + rhs.y}; }
     Point operator-(const Point &rhs){ return Point{x - rhs.x , y - rhs.y}; }
     Point operator*(const long double scalar){return Point{x * scalar , y * scalar}; }
@@ -55,6 +55,7 @@ Point Centroid(Point p1, Point p2, Point p3){
     // p1,p2,p3 are not on the same Line.
     gp.x = (p1.x + p2.x + p3.x) / 3.0;
     gp.y = (p1.y + p2.y + p3.y) / 3.0;
+    return gp;
 };
 
 Point turn90(Point p){
@@ -77,9 +78,21 @@ pair<Point,string> Intersection(Line l , Line m){
     }
     else{
         // y = ax+b
+        if(l.p2.x - l.p1.x == 0 || m.p2.x - m.p1.x == 0){
+            // Div0
+            RETURN.first = Point{0,0};
+            RETURN.second = "FAIL";
+            return RETURN;
+        }
         long double al = (l.p2.y - l.p1.y) / (l.p2.x - l.p1.x);
         long double am = (m.p2.y - m.p1.y) / (m.p2.x - m.p1.x);
         long double bunbo = al-am;
+        if(bunbo == 0){
+            // Div0
+            RETURN.first = Point{0,0};
+            RETURN.second = "FAIL";
+            return RETURN;
+        }
         // bunbo isn't 0.
         long double bl = l.p1.y - al * l.p1.x;
         long double bm = m.p1.y - am * m.p1.x;
